@@ -3,7 +3,11 @@ export default defineNuxtConfig({
   ssr: false,
   devtools: { enabled: true },
   plugins: ["@/plugins/wijmo", "@/plugins/vee-validate"],
-  modules: ["@nuxtjs/tailwindcss", "nuxt-auth-sanctum"],
+  modules: [
+    "@nuxtjs/tailwindcss",
+    "nuxt-auth-sanctum",
+    "@nuxt/test-utils/module",
+  ],
   sanctum: {
     baseUrl: process.env.BASE_URL, // Laravel API
     origin: process.env.BASE_URL, // Nuxt app, by default will be used 'useRequestURL().origin'
