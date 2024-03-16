@@ -24,3 +24,5 @@ logs
 !.env.example
 
 *storybook.log
+ .storybook/auto-imports.d.ts
+ .storybook/components.d.ts
