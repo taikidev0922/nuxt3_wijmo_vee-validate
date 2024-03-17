@@ -19,9 +19,21 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <form @submit="onSubmit">
-    <InputText name="email" label="email" type="email" />
-    <InputText name="password" label="password" type="password" />
-    <Button text="signin" />
-  </form>
+  <div class="h-screen flex justify-center items-center bg-gray-200">
+    <div class="rounded-lg px-4 py-6 mb-10 w-1/4 h-1/3 bg-white shadow-md">
+      <h2 class="text-xl font-semibold text-gray-800">
+        サンプル販売管理システム
+      </h2>
+      <form @submit="onSubmit">
+        <InputText name="email" label="email" type="email" class="my-3" />
+        <InputText
+          name="password"
+          label="password"
+          type="password"
+          class="my-3"
+        />
+        <Button text="signin" class="w-full mt-3" />
+      </form>
+    </div>
+  </div>
 </template>

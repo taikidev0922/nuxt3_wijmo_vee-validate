@@ -2,7 +2,9 @@
 defineProps({
   text: {
     type: String,
-    required: true,
+  },
+  color: {
+    type: String,
   },
 });
 
@@ -13,9 +15,10 @@ const onClick = () => {
 </script>
 <template>
   <button
-    class="bg-blue-500 text-white px-4 py-2 rounded-md m-1"
+    :class="`${color} text-white px-4 py-2 rounded-md m-1`"
     @click="onClick"
   >
+    <slot />
     {{ text }}
   </button>
 </template>

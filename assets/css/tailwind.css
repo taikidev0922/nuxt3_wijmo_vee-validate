@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.editable {
+  background-color: #f56565 !important;
+}

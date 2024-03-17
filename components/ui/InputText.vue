@@ -1,5 +1,5 @@
 <template>
-  <div class="form-group">
+  <div class="form-group mx-1">
     <div class="flex flex-col">
       <label for="theComboNoSrc" class="font-semibold">
         {{ label }}
@@ -12,7 +12,7 @@
         :inputType="type || 'text'"
       ></WjComboBox>
     </div>
-    <div class="text-red-500 text-sm">{{ errorMessage }}</div>
+    <div class="text-red-500 text-sm h-2">{{ errorMessage }}</div>
   </div>
 </template>
 

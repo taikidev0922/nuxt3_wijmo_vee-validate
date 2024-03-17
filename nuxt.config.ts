@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     "@nuxtjs/tailwindcss",
     "nuxt-auth-sanctum",
     "@nuxt/test-utils/module",
+    "nuxt-icon",
   ],
   sanctum: {
     baseUrl: process.env.BASE_URL, // Laravel API
