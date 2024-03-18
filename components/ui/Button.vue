@@ -6,6 +6,9 @@ defineProps({
   color: {
     type: String,
   },
+  disabled: {
+    type: Boolean,
+  },
 });
 
 const emit = defineEmits(["click"]);
@@ -15,8 +18,9 @@ const onClick = () => {
 </script>
 <template>
   <button
-    :class="`${color} text-white px-4 py-2 rounded-md m-1`"
+    :class="`${color} text-white px-4 py-1 rounded-md m-1`"
     @click="onClick"
+    :disabled="disabled"
   >
     <slot />
     {{ text }}

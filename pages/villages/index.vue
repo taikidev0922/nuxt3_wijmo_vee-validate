@@ -6,8 +6,9 @@ import { useForm } from "vee-validate";
 import { DataType } from "~/types/wijmo";
 import SelectActionType from "~/components/ui/SelectActionType.vue";
 import { ActionType } from "~/types/action-type";
-const client = useSanctumClient();
+import Accordion from "~/components/ui/Accordion.vue";
 const items = useState("items", () => []);
+
 const { handleSubmit } = useForm({
   validationSchema: toTypedSchema(
     yup.object({
@@ -25,15 +26,17 @@ const columns = computed(() => [
 ]);
 
 const search = handleSubmit(async (values) => {
-  const { data, pending, error, refresh } = await useAsyncData("users", () =>
-    client("/api/villages", { query: { ...values, limit: 3000 } })
-  );
-  items.value = data.value.items;
+  const data = await useCustomFetch("/api/villages", {
+    query: { ...values, limit: 100000 },
+  });
+  items.value = data.items;
 });
 const update = async (items: any) => {
-  const { data, pending, error, refresh } = await useAsyncData("villages", () =>
-    client("/api/villages", { method: "put", body: { items } })
-  );
+  const data = await useCustomFetch("/api/villages", {
+    method: "put",
+    body: { items },
+  });
+  items.value = data.items;
 };
 </script>
 
@@ -47,13 +50,17 @@ const update = async (items: any) => {
     ]"
     :value="ActionType.register"
   />
-  <form @submit="search">
-    <div class="flex">
-      <InputText name="idm" label="idm" />
-      <InputText name="name" label="村名(和文)" />
-      <InputText name="name_en" label="村名(英文)" />
-      <Button text="検索" color="bg-blue-500 h-1/3 mt-5" />
-    </div>
-  </form>
-  <FlexGrid :items="items" :columns="columns" @submit="update" />
+  <Accordion title="検索条件">
+    <form @submit="search">
+      <fieldset class="flex">
+        <InputText name="idm" label="idm" />
+        <InputText name="name" label="村名(和文)" />
+        <InputText name="name_en" label="村名(英文)" />
+        <Button text="検索" color="bg-blue-500 mt-5" />
+      </fieldset>
+    </form>
+  </Accordion>
+  <Accordion title="一覧">
+    <FlexGrid :items="items" :columns="columns" @submit="update" />
+  </Accordion>
 </template>

@@ -12,6 +12,7 @@ import {
   CellType,
 } from "@grapecity/wijmo.grid";
 import type { Column } from "~/types/wijmo";
+import { ActionType } from "~/types/action-type";
 const props = defineProps({
   items: Array,
   columns: {
@@ -23,35 +24,53 @@ const { isEditableActionType, selectedActionType } = useActionType();
 watch(selectedActionType, () => {
   gridRef.value!.collectionView.sourceCollection = [];
   gridRef.value?.collectionView?.refresh();
-  console.log("?");
+  if (selectedActionType.value === ActionType.register) {
+    gridRef.value!.collectionView.sourceCollection = Array.from(
+      { length: 10 },
+      () => ({})
+    );
+    gridRef.value?.collectionView?.refresh();
+  }
 });
 const gridRef = ref<FlexGrid>();
 const onInitialized = (grid: FlexGrid) => {
   gridRef.value = grid;
   grid.selectionMode = SelectionMode.Row;
   grid.keyActionTab = KeyAction.CycleEditable;
+  if (selectedActionType.value === ActionType.register) {
+    gridRef.value!.collectionView.sourceCollection = Array.from(
+      { length: 10 },
+      () => ({})
+    );
+  }
   grid.cellEditEnded.addHandler((g, args) => {
     grid.beginUpdate();
-    grid.collectionView.items[args.row].operation = "SAVE";
+    if (selectedActionType.value === ActionType.delete) {
+      grid.collectionView.items[args.row].operation = "DELETE";
+    } else if (isEditableActionType.value) {
+      grid.collectionView.items[args.row].operation = "SAVE";
+    }
     if (args.getColumn().binding !== "isSelected") {
       grid.collectionView.items[args.row].isSelected = true;
     }
     grid.endUpdate();
   });
   grid.itemFormatter = (panel, r, c, cell) => {
-    if (panel.cellType === CellType.Cell) {
+    if (
+      panel.cellType === CellType.Cell &&
+      !cell.classList.contains("wj-header")
+    ) {
       if (isEditableActionType.value) {
         cell.classList.add("editable");
       }
-      cell.classList.add("editable");
     }
   };
 };
 
 const columns = computed<Column[]>(() => [
   {
-    binding: " ",
-    header: "",
+    binding: "isSelected",
+    header: " ",
     dataType: DataType.Boolean,
     width: 30,
     cssClass: "wj-header",
@@ -61,19 +80,16 @@ const columns = computed<Column[]>(() => [
     header: " ",
     width: 30,
     dataType: DataType.String,
-    cssClass: "wj-header",
+    cssClass: "wj-header wj-row-header",
     cellTemplate(ctx, cell) {
       if (ctx.value === "SAVE" && ctx.item.id) {
-        cell!.style.backgroundColor = "green";
-        return `<span class="font-bold text-white text-xl h-6 w-4 rounded-full flex items-center justify-center">U</span>`;
+        return `<span class="bg-green-600 font-bold text-white text-xl h-8 w-8 flex items-center justify-center absolute left-0 top-0">U</span>`;
       }
       if (ctx.value === "SAVE" && !ctx.item.id) {
-        cell!.style.backgroundColor = "blue";
-        return `<span class="font-bold text-white text-xl h-6 w-4 rounded-full flex items-center justify-center">I</span>`;
+        return `<span class="bg-blue-500 font-bold text-white text-xl h-8 w-8 flex items-center justify-center absolute left-0 top-0">I</span>`;
       }
       if (ctx.value === "DELETE") {
-        cell!.style.backgroundColor = "red";
-        return `<span class="font-bold text-white text-xl h-6 w-4 rounded-full flex items-center justify-center">D</span>`;
+        return `<span class="bg-red-500 font-bold text-white text-xl h-8 w-8 flex items-center justify-center absolute left-0 top-0">D</span>`;
       }
       cell!.style.backgroundColor = "";
       return "";
@@ -95,7 +111,7 @@ const update = () => {
 <template>
   <WjFlexGrid
     :items-source="items"
-    style="height: 70vh"
+    style="height: 60vh"
     :initialized="onInitialized"
   >
     <WjFlexGridColumn
@@ -104,7 +120,10 @@ const update = () => {
       :binding="column.binding"
       :header="column.header"
       :dataType="column.dataType"
-      :isReadOnly="column.isReadOnly"
+      :isReadOnly="
+        column.isReadOnly ||
+        (!isEditableActionType && column.binding !== 'isSelected')
+      "
       :visible="column.visible"
       :cellTemplate="column.cellTemplate"
       :width="column.width"
@@ -115,5 +134,7 @@ const update = () => {
       {{ row.index + 1 }}
     </WjFlexGridCellTemplate>
   </WjFlexGrid>
-  <Button text="更新" color="bg-blue-500 h-1/3" @click="update" />
+  <div class="flex justify-end">
+    <Button text="更新" color="bg-green-500" @click="update" />
+  </div>
 </template>

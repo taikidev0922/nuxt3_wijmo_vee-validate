@@ -13,17 +13,17 @@ const props = defineProps({
   },
 });
 
-const { selectedActionType, setActionType } = useActionType();
+const { setActionType } = useActionType();
 
 const onChange = (event: Event) => {
-  setActionType(
-    (event.target as HTMLInputElement).value as unknown as ActionType
-  );
+  setActionType(Number((event.target as HTMLInputElement).value) as ActionType);
 };
 </script>
 
 <template>
-  <div class="flex space-x-4 border border-gray-400 rounded-sm p-1 mb-3">
+  <section
+    class="flex space-x-4 border border-gray-400 rounded-sm p-1 my-2 bg-white"
+  >
     <div
       class="flex items-center"
       v-for="actionType in actionTypes"
@@ -62,5 +62,5 @@ const onChange = (event: Event) => {
         >削除する</label
       >
     </div>
-  </div>
+  </section>
 </template>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch } from "vue";
 const { logout } = useSanctumAuth();
+const { isLoading } = useLoading();
 const isDrawerOpen = ref(false);
 
 function toggleDrawer() {
@@ -20,16 +21,20 @@ onUnmounted(() => {
 });
 </script>
 <template>
-  <div>
+  <div class="bg-slate-100 h-full absolute w-full">
+    <div
+      v-if="isLoading"
+      class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 flex justify-center items-center"
+    >
+      <div class="text-white font-bold text-xl animate-pulse">Loading...</div>
+    </div>
     <header class="bg-gray-800 text-white flex justify-between items-center">
       <button @click.stop="toggleDrawer" class="p-2">
-        <Button>
-          <div icon="bars" />
-        </Button>
+        <Icon name="mdi:menu" color="white" size="30" />
       </button>
-      <p class="text-xl">サンプル販売管理システム</p>
+      <p class="text-xl">test</p>
       <Button text="logout" @click="logout">
-        <div icon="sign-out-alt" />
+        <Icon name="mdi:logout" color="white" size="30" />
       </Button>
     </header>
     <aside
@@ -40,16 +45,20 @@ onUnmounted(() => {
       <nav class="pl-2">
         <ul>
           <li>
-            <NuxtLink to="/" class="hover:text-gray-300">Home</NuxtLink>
+            <NuxtLink to="/" class="hover:text-gray-300 text-white"
+              >Home</NuxtLink
+            >
           </li>
           <li>
-            <NuxtLink to="/villages" class="hover:text-gray-300">村</NuxtLink>
+            <NuxtLink to="/villages" class="hover:text-gray-300 text-white"
+              >村</NuxtLink
+            >
           </li>
         </ul>
       </nav>
     </aside>
     <main
-      :class="`${isDrawerOpen ? 'ml-60' : ''} transition-all duration-500 p-4`"
+      :class="`${isDrawerOpen ? 'ml-60' : ''} transition-all duration-500 px-4 pt-2`"
     >
       <slot />
     </main>
